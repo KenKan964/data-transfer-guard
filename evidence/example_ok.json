@@ -1,0 +1,25 @@
+{
+  "schema_version": "dtg-report-v1",
+  "tool_version": "0.1.0",
+  "status": "PASS",
+  "exit_code": 0,
+  "inspection_complete": true,
+  "row_counts": {
+    "before": 2,
+    "after": 2
+  },
+  "matched_rows": 2,
+  "detection_count": 0,
+  "counts_by_code": {},
+  "violations": [],
+  "sha256": {
+    "before": "f5c3da84b673d5d8336ed2e19d9a9d3861713f992d03abad27b6478a1f9b67ef",
+    "after": "3822103a2e208a0ea5c375239c67e1786c9b14a61083795dafc6eede19168f90",
+    "policy": "69fbc163abe2a0724d26270f47e0d027974c4ca0f7f71b4068f49b36cf13bea8"
+  },
+  "key_display": "suppressed",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41"
+  }
+}

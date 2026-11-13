@@ -1,0 +1,67 @@
+{
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41"
+  },
+  "cases": 26,
+  "repeats": 30,
+  "executions": 1560,
+  "all_expected": true,
+  "human_effort": null,
+  "seed": 1001,
+  "median_ms": {
+    "oss": 0.06636500000000001,
+    "dtg": 0.08731900000000001
+  },
+  "source_physical_lines": {
+    "dtg.py": 234,
+    "benchmarks/oss_check.py": 52
+  },
+  "scripted_artifact_operations": {
+    "initial_setup": {
+      "oss": {
+        "config_files_created": 1,
+        "cli_invocations": 1
+      },
+      "dtg": {
+        "config_files_created": 1,
+        "cli_invocations": 1
+      }
+    },
+    "allowed_column_addition": {
+      "oss": {
+        "config_files_edited": 1,
+        "production_code_lines_changed": 0
+      },
+      "dtg": {
+        "config_files_edited": 1,
+        "production_code_lines_changed": 0
+      }
+    },
+    "sample_change": {
+      "oss": {
+        "csv_files_edited": 1,
+        "production_code_lines_changed": 0
+      },
+      "dtg": {
+        "csv_files_edited": 1,
+        "production_code_lines_changed": 0
+      }
+    },
+    "result_judgment": {
+      "oss": {
+        "cli_invocations": 1,
+        "production_code_lines_changed": 0
+      },
+      "dtg": {
+        "cli_invocations": 1,
+        "production_code_lines_changed": 0
+      }
+    }
+  },
+  "limits": [
+    "API wall time includes reading and validation, excludes process startup/report persistence",
+    "baseline core classification only; lacks DTG strict quote extension, provenance JSON and exclusive output handling",
+    "operation counts describe this scripted workflow, not observed human actions"
+  ]
+}

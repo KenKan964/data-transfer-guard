@@ -1,0 +1,928 @@
+[
+  {
+    "id": "DTG-T01",
+    "name": "allowed",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,承認済み\n002,鈴木,B社,承認済み\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "DTG-T02",
+    "name": "reorder",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n002,鈴木,B社,審査中\n001,田中,A社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "DTG-T03",
+    "name": "unchanged",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "DTG-T04",
+    "name": "protected",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,C社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "UNAUTHORIZED_CHANGE"
+    ]
+  },
+  {
+    "id": "DTG-T05",
+    "name": "duplicate_before",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n001,田中,A社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "DUPLICATE_KEY"
+    ]
+  },
+  {
+    "id": "DTG-T05",
+    "name": "duplicate_after",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n001,田中,A社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "DUPLICATE_KEY"
+    ]
+  },
+  {
+    "id": "DTG-T06",
+    "name": "removed",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "MISSING_ROW"
+    ]
+  },
+  {
+    "id": "DTG-T07",
+    "name": "added",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n003,佐藤,C社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "UNEXPECTED_ROW"
+    ]
+  },
+  {
+    "id": "DTG-T08",
+    "name": "id_changed",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n003,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "MISSING_ROW",
+      "UNEXPECTED_ROW"
+    ]
+  },
+  {
+    "id": "DTG-T09",
+    "name": "header_order",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "状態,所属,氏名,ID\n審査中,A社,田中,001\n審査中,B社,鈴木,002\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "DTG-T10",
+    "name": "header_added",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態,extra\n001,田中,A社,審査中,x\n002,鈴木,B社,審査中,x\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "SCHEMA_MISMATCH"
+    ]
+  },
+  {
+    "id": "DTG-T10",
+    "name": "header_removed",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,状態\n001,田中,審査中\n002,鈴木,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "SCHEMA_MISMATCH"
+    ]
+  },
+  {
+    "id": "DTG-T11",
+    "name": "duplicate_header",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,氏名,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "DUPLICATE_HEADER"
+    ]
+  },
+  {
+    "id": "DTG-T11",
+    "name": "short_row",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "COLUMN_COUNT_MISMATCH"
+    ]
+  },
+  {
+    "id": "DTG-T11",
+    "name": "long_row",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中,x\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "COLUMN_COUNT_MISMATCH"
+    ]
+  },
+  {
+    "id": "DTG-T12",
+    "name": "empty_key",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "EMPTY_KEY"
+    ]
+  },
+  {
+    "id": "DTG-T12",
+    "name": "spaces_key",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n  ,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "EMPTY_KEY"
+    ]
+  },
+  {
+    "id": "DTG-T12",
+    "name": "unknown_column",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "unknown"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "UNKNOWN_ALLOWED_COLUMN"
+    ]
+  },
+  {
+    "id": "DTG-T12",
+    "name": "allow_id",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "ID"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "INVALID_ALLOWED_COLUMNS"
+    ]
+  },
+  {
+    "id": "DTG-T13",
+    "name": "leading_zero",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n1,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "MISSING_ROW",
+      "UNEXPECTED_ROW"
+    ]
+  },
+  {
+    "id": "DTG-T13",
+    "name": "empty_vs_zero",
+    "before": "ID,氏名,状態\n001,,x\n",
+    "after": "ID,氏名,状態\n001,0,x\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "UNAUTHORIZED_CHANGE"
+    ]
+  },
+  {
+    "id": "DTG-T13",
+    "name": "spaces",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中 ,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "UNAUTHORIZED_CHANGE"
+    ]
+  },
+  {
+    "id": "DTG-T14",
+    "name": "output_input",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "OUTPUT_IS_INPUT"
+    ],
+    "out_kind": "before"
+  },
+  {
+    "id": "DTG-T14",
+    "name": "output_policy",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "OUTPUT_IS_INPUT"
+    ],
+    "out_kind": "policy"
+  },
+  {
+    "id": "DTG-T14",
+    "name": "existing_output",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "OUTPUT_UNAVAILABLE"
+    ],
+    "out_kind": "existing"
+  },
+  {
+    "id": "DTG-T15",
+    "name": "invalid_utf8",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "INVALID_UTF8"
+    ],
+    "after_hex": "49442cff0a"
+  },
+  {
+    "id": "DTG-T15",
+    "name": "broken_policy",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "INVALID_POLICY"
+    ],
+    "policy_raw": "{oops"
+  },
+  {
+    "id": "DTG-T16",
+    "name": "missing_before",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "READ_ERROR"
+    ],
+    "missing": "before"
+  },
+  {
+    "id": "DTG-T16",
+    "name": "missing_policy",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "READ_ERROR"
+    ],
+    "missing": "policy"
+  },
+  {
+    "id": "EX01",
+    "name": "bom",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "﻿ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "EX02",
+    "name": "quoted_comma",
+    "before": "ID,氏名,状態\n001,\"x,y\",ok\n",
+    "after": "ID,氏名,状態\n001,\"x,y\",ok\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "EX03",
+    "name": "quoted_newline",
+    "before": "ID,氏名,状態\n001,\"x\r\ny\",ok\n",
+    "after": "ID,氏名,状態\n001,\"x\ny\",ok\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "UNAUTHORIZED_CHANGE"
+    ]
+  },
+  {
+    "id": "EX04",
+    "name": "unclosed_quote",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,状態\n001,\"oops,x\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "CSV_PARSE_ERROR"
+    ]
+  },
+  {
+    "id": "EX05",
+    "name": "bare_quote",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田\"中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "CSV_PARSE_ERROR"
+    ]
+  },
+  {
+    "id": "EX06",
+    "name": "junk_quote",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,\"田中\"junk,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "CSV_PARSE_ERROR"
+    ]
+  },
+  {
+    "id": "EX07",
+    "name": "unknown_field",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false,
+      "unknown": 1
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "INVALID_POLICY_FIELDS"
+    ]
+  },
+  {
+    "id": "EX08",
+    "name": "duplicate_allowed",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態",
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "INVALID_ALLOWED_COLUMNS"
+    ]
+  },
+  {
+    "id": "EX09",
+    "name": "integer_boolean",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": 0,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "INVALID_ROW_POLICY"
+    ]
+  },
+  {
+    "id": "EX10",
+    "name": "wrong_version",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "next",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "INVALID_POLICY_VERSION"
+    ]
+  },
+  {
+    "id": "EX11",
+    "name": "duplicate_json_key",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "DUPLICATE_POLICY_FIELD"
+    ],
+    "policy_raw": "{\"schema_version\": \"dtg-policy-v1\", \"key_column\": \"ID\", \"allowed_update_columns\": [\"\\u72b6\\u614b\"], \"allow_added_rows\": false, \"allow_removed_rows\": false,\"key_column\":\"ID\"}"
+  },
+  {
+    "id": "EX12",
+    "name": "empty_header",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "EMPTY_HEADER"
+    ]
+  },
+  {
+    "id": "EX13",
+    "name": "blank_record",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "COLUMN_COUNT_MISMATCH"
+    ]
+  },
+  {
+    "id": "EX14",
+    "name": "empty_file",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "MISSING_HEADER"
+    ]
+  },
+  {
+    "id": "EX15",
+    "name": "header_only",
+    "before": "ID,氏名,状態\n",
+    "after": "状態,ID,氏名\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "EX16",
+    "name": "allow_added",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n003,佐藤,C社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": true,
+      "allow_removed_rows": false
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "EX17",
+    "name": "allow_removed",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": true
+    },
+    "status": "PASS",
+    "codes": []
+  },
+  {
+    "id": "EX18",
+    "name": "show_keys",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,C社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "FAIL",
+    "codes": [
+      "UNAUTHORIZED_CHANGE"
+    ],
+    "show_keys": true
+  },
+  {
+    "id": "EX19",
+    "name": "nul",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n\u0000",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "NUL_BYTE"
+    ]
+  },
+  {
+    "id": "EX20",
+    "name": "missing_key_column",
+    "before": "ID,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "after": "key,氏名,所属,状態\n001,田中,A社,審査中\n002,鈴木,B社,審査中\n",
+    "policy": {
+      "schema_version": "dtg-policy-v1",
+      "key_column": "ID",
+      "allowed_update_columns": [
+        "状態"
+      ],
+      "allow_added_rows": false,
+      "allow_removed_rows": false
+    },
+    "status": "INVALID_INPUT",
+    "codes": [
+      "MISSING_KEY_COLUMN"
+    ]
+  }
+]

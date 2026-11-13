@@ -1,0 +1,1 @@
+{"schema_version":"dtg-policy-v1","key_column":"ID","allowed_update_columns":["状態"],"allow_added_rows":false,"allow_removed_rows":false}

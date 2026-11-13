@@ -1,0 +1,40 @@
+{
+  "schema_version": "dtg-acceptance-evidence-v1",
+  "cases": 49,
+  "additional_tests": 4,
+  "input_unchanged_all_cli_cases": true,
+  "actual_status_counts": {
+    "PASS": 9,
+    "FAIL": 11,
+    "INVALID_INPUT": 29
+  },
+  "environments": [
+    {
+      "os": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "python": "3.12.14",
+      "tests": 53,
+      "passed": 53,
+      "log": "unittest.log"
+    },
+    {
+      "os": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "python": "3.13.5",
+      "tests": 53,
+      "passed": 53,
+      "log": "unittest_python313.log"
+    }
+  ],
+  "not_verified": [
+    "Python 3.11",
+    "Windows",
+    "macOS",
+    "GitHub Actions execution"
+  ],
+  "source_sha256": {
+    "benchmarks/compare.py": "7e858dd49b8127948ece5b6a918a0e2db8e2be786b4f0b729983822af50ded2c",
+    "benchmarks/oss_check.py": "6a74aa420d0c9bd8f5242b1f6a8a51bfcfc310ca7f0f4d0bad17d2a3c314c557",
+    "dtg.py": "6ade88e25499c9e1bc6f488846be9a937007dec958b1c5be14c49f2b2272b2a5",
+    "tests/test_acceptance.py": "02c6bc4d75e2ff9d19f81ad084ac21df5abda533e4a6e39137682f19abc3566e",
+    "tests/test_edges.py": "32aa02a4dc139e2cb03977ee69184ebe33d2ce21f0c0379d6793a2cb055f3bfc"
+  }
+}

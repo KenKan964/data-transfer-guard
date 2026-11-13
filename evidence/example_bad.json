@@ -1,0 +1,35 @@
+{
+  "schema_version": "dtg-report-v1",
+  "tool_version": "0.1.0",
+  "status": "FAIL",
+  "exit_code": 1,
+  "inspection_complete": true,
+  "row_counts": {
+    "before": 2,
+    "after": 2
+  },
+  "matched_rows": 2,
+  "detection_count": 1,
+  "counts_by_code": {
+    "UNAUTHORIZED_CHANGE": 1
+  },
+  "violations": [
+    {
+      "code": "UNAUTHORIZED_CHANGE",
+      "column": "\u6240\u5c5e",
+      "key": null,
+      "before_record": 2,
+      "after_record": 2
+    }
+  ],
+  "sha256": {
+    "before": "f5c3da84b673d5d8336ed2e19d9a9d3861713f992d03abad27b6478a1f9b67ef",
+    "after": "d2ee22b8aa543734b856c82754b0bdc6e322f99744f4870c59aec490311409b2",
+    "policy": "69fbc163abe2a0724d26270f47e0d027974c4ca0f7f71b4068f49b36cf13bea8"
+  },
+  "key_display": "suppressed",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41"
+  }
+}

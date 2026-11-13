@@ -1,0 +1,12 @@
+--- policy.json
++++ policy.json
+@@ -2,7 +2,8 @@
+   "schema_version": "dtg-policy-v1",
+   "key_column": "ID",
+   "allowed_update_columns": [
+-    "状態"
++    "状態",
++    "所属"
+   ],
+   "allow_added_rows": false,
+   "allow_removed_rows": false
