@@ -1,124 +1,161 @@
 # Data Transfer Guard
 
-[日本語](README_ja.md) · CSV-only · Python 3.11+ · standard library only
+**Check what changed between two CSV files — and detect edits outside the columns you explicitly allow.**
 
-Read-only verification of a CSV update: match rows by a single string ID,
-permit changes only in declared columns, and report unexpected changes or
-invalid input. This **does not transfer, edit or repair data**. Independent of
-SQLite Fault Lab. Release candidate 0.1.0; not published to GitHub.
+**v0.1.0 — Experimental · Python 3.11+ · Standard library only · CSV-only · MIT License**
 
-## Quick start (Linux/macOS)
+**English** | [日本語](README_ja.md) · [v0.1.0 pre-release](https://github.com/KenKan964/data-transfer-guard/releases/tag/v0.1.0)
 
-No installation or pip packages required. From this extracted directory:
+## Why use it?
 
-```bash
+A CSV update can look successful while silently changing the wrong field, removing a record, or duplicating an ID. For workflows where only certain columns should change, reviewing thousands of cells manually is difficult.
+
+Data Transfer Guard is a **free, read-only command-line validator** for checking a **before** and **after** CSV against an explicit update policy.
+
+It matches records by a chosen single ID column, checks which changes are permitted, and produces a JSON diagnostic report. **It never transfers, edits, repairs, or overwrites the input CSVs.**
+
+> **Scope:** The tool verifies that two snapshots follow your declared *change rules*. It cannot tell whether a value entered in an allowed column is factually or commercially correct.
+
+## What can it detect?
+
+| Check | What it finds |
+| --- | --- |
+| Protected columns | Values changed outside the list of allowed update columns (`UNAUTHORIZED_CHANGE`) |
+| Missing / added records | Removed or new rows when the policy forbids them |
+| Duplicate or missing IDs | Ambiguous or invalid keys that prevent trustworthy matching |
+| Schema differences | Header-set changes and missing required columns |
+| Malformed CSV | Invalid quoting, ragged rows, duplicate headers, blank records, and unsupported encoding |
+| Output safeguards | Existing or unsafe report paths are refused instead of overwritten |
+
+**Comparison rules:** IDs and values are compared as exact strings. `001` and `1` are different, as are empty strings and `0`. Record order and column order may change; the set of headers must still match.
+
+## Quick start
+
+**Requirements:** Python 3.11 or newer. No external services or pip dependencies.
+
+From the repository root, create a directory for the output reports.
+
+**Linux / macOS:**
+
+```sh
 mkdir -p reports
 python3 dtg.py verify --before examples/before.csv --after examples/after_ok.csv --policy examples/policy.json --out reports/ok.json
 python3 dtg.py verify --before examples/before.csv --after examples/after_bad.csv --policy examples/policy.json --out reports/bad.json
 ```
 
-First command: exit **0**, JSON `status=PASS`. Second command: exit **1**,
-`status=FAIL`, `UNAUTHORIZED_CHANGE` on column `所属`, key suppressed.
-`evidence/example_bad.json` contains the complete synthetic example. The bad
-example must be detected; its FAIL status is a successful tool demonstration.
-The reports directory must exist; output filenames must be new. Re-running
-with the same output filename is rejected, not overwritten.
-
-## Windows PowerShell
+**Windows PowerShell:**
 
 ```powershell
 New-Item -ItemType Directory -Force reports | Out-Null
+py -3 dtg.py verify --before examples/before.csv --after examples/after_ok.csv --policy examples/policy.json --out reports/ok.json
 py -3 dtg.py verify --before examples/before.csv --after examples/after_bad.csv --policy examples/policy.json --out reports/bad.json
-$LASTEXITCODE # expected: 1
-py -3 -m unittest discover -s tests -v
 ```
 
-Use a Python 3.11+ interpreter. On Linux/macOS run tests with
-`python3 -m unittest discover -s tests -v`.
+Use **new report file names** for each run; existing files are never overwritten. The second command deliberately returns exit code `1`: detecting the bad example is the expected outcome, not a malfunction. For each sample, the report is written to the specified JSON file.
 
-## Policy and exact comparison
+## An example of a detected change
+
+The included policy [`examples/policy.json`](examples/policy.json) permits changes to column **`状態` (status)** only. In the deliberately bad sample, column **`所属` (affiliation)** changes instead.
+
+The committed [sample failure report](evidence/example_bad.json) includes these actual fields (excerpt):
 
 ```json
-{"schema_version":"dtg-policy-v1","key_column":"ID","allowed_update_columns":["状態"],"allow_added_rows":false,"allow_removed_rows":false}
+{
+  "status": "FAIL",
+  "exit_code": 1,
+  "inspection_complete": true,
+  "matched_rows": 2,
+  "detection_count": 1,
+  "counts_by_code": {
+    "UNAUTHORIZED_CHANGE": 1
+  },
+  "violations": [
+    {
+      "code": "UNAUTHORIZED_CHANGE",
+      "column": "所属",
+      "key": null,
+      "before_record": 2,
+      "after_record": 2
+    }
+  ]
+}
 ```
 
-All five fields are mandatory. Unknown/duplicate JSON fields, unknown columns,
-duplicate allowed columns, allowing the ID column, non-boolean row flags and
-unsupported versions are rejected. Set either row flag to true only if those
-row changes are intentionally permitted; default examples forbid both.
+The normal sample returns `PASS`, exit code `0`, and zero detected violations; see [its recorded JSON](evidence/example_ok.json).
 
-IDs and cell values are exact strings. `001` differs from `1`, empty differs
-from `0`, and spaces / embedded newlines are preserved. Blank or whitespace-only
-IDs/headers are invalid. Other nonempty strings are never trimmed or normalized.
-Row and header order may change; header sets must match. Missing required key
-or allowed columns are INVALID_INPUT; other schema changes are FAIL.
+**Privacy by default:** the report does **not** include old or new cell values, and IDs are hidden as `null` unless `--show-keys` is explicitly selected. Column names, record positions, and file hashes can still reveal sensitive context.
 
-UTF-8 or UTF-8 BOM only; comma delimiter, double quotes, doubled quote escaping.
-LF/CRLF/CR record separators are accepted. Quotes in bare fields, trailing junk
-after a quoted field, unclosed quotes, NULs, duplicate headers and ragged rows
-are rejected. Blank records are invalid; header-only files are valid.
+## Configure the allowed changes
 
-## Reports, privacy and exit codes
+The example policy is:
 
-|Exit|JSON status|Meaning|
-|---:|---|---|
-|0|PASS|Inspection completed; policy satisfied|
-|1|FAIL|Inspection completed; update-rule violation|
-|2|INVALID_INPUT|Invalid policy/CSV, unreadable input, invalid CLI or output refusal|
-
-Reports include row/match counts, violations, classification counts, SHA-256 of
-bytes read and environment information. **Cell values are never included**.
-Keys are `null` by default; record ordinals identify locations (not physical
-line numbers when quoted fields contain newlines). `--show-keys` explicitly
-reveals raw IDs: avoid for personal data. Column names and file hashes may also
-be sensitive. If output is unsafe/unavailable, JSON is written to **stderr**
-instead; the existing destination is preserved. Unknown counts/hashes are null.
-
-Input files are opened only for reading. Output uses exclusive creation,
-refusing an input path, existing report, symlink or existing hardlink alias.
-No networking, credentials, telemetry or third-party runtime dependencies.
-Use stable ordinary local files; concurrent writers are outside this MVP.
-
-## Reproduce evidence and comparison
-
-```bash
-DTG_EVIDENCE_DIR=reports/acceptance python3 -m unittest discover -s tests -v
-python3 benchmarks/compare.py reports/comparison
+```json
+{
+  "schema_version": "dtg-policy-v1",
+  "key_column": "ID",
+  "allowed_update_columns": ["状態"],
+  "allow_added_rows": false,
+  "allow_removed_rows": false
+}
 ```
 
-PowerShell: set `$env:DTG_EVIDENCE_DIR='reports/acceptance'` then run tests.
-The comparison directory must be new. See [REPORT_ja.md](REPORT_ja.md) and
-[TECHNICAL_SPEC.md](TECHNICAL_SPEC.md). Fixtures and expected results are saved
-in `tests/cases.json`: 49 CLI cases cover all DTG-T01–T16, plus four additional
-checks. Each CLI test checks unchanged input hashes. Existing-output refusals
-use stderr JSON; missing files remain missing.
+| Field | Meaning |
+| --- | --- |
+| `key_column` | Column containing a unique ID for each record |
+| `allowed_update_columns` | Columns permitted to change; **the ID column cannot be included** |
+| `allow_added_rows` | Whether new records may appear |
+| `allow_removed_rows` | Whether records may disappear |
+| `schema_version` | Policy contract version, currently `dtg-policy-v1` |
 
-Executed: Linux Python **3.12.14 and 3.13.5**, 53/53 each. Python 3.11,
-Windows and macOS are **not locally verified**. GitHub Actions config targets
-Ubuntu/Windows × 3.11/3.12/3.13 but has **not run**; configuration is not evidence.
+All five policy fields are required. Unknown or duplicate JSON keys, invalid field types, nonexistent columns, and invalid CSV structures are rejected rather than quietly ignored.
 
-## Value and limits
+The tool performs no trimming, case folding, or Unicode normalization. Only UTF-8 (optionally with BOM) comma-separated CSV is supported.
 
-This packages repeatable policy checks, strict input validation, private-by-default
-JSON evidence and output safeguards. An independent `csv` + `unittest` reference
-can implement the same core rules; the policy mechanism is not unique to DTG.
-The supplied core comparison is intentionally limited and does not equate
-baseline report functionality with DTG. No human effort savings or commercial
-demand have been measured. No speed advantage is claimed.
+## Exit codes and reporting
 
-All files are read into memory. No streaming, normalization, composite keys,
-Excel/Sheets connections, correction, expected-value verification of allowed
-changes or business correctness guarantee. The standard CSV field size limit
-applies. A PASS says only that these two snapshots obey the declared policy.
+| Exit code | JSON status | Meaning |
+| ---: | --- | --- |
+| `0` | `PASS` | Comparison completed and the declared change rules were satisfied |
+| `1` | `FAIL` | Comparison completed and one or more policy violations were found |
+| `2` | `INVALID_INPUT` | Invalid input/policy, unreadable files, or output refusal/failure |
 
-## Release and license
+Reports include record counts, matches, violation types, input SHA-256 hashes, and runtime information. They never expose full cell values.
 
-MIT candidate: [LICENSE](LICENSE); publisher must approve licensing/attribution
-before release. See [SECURITY.md](SECURITY.md) and [CHANGELOG.md](CHANGELOG.md).
-Review department acceptance, untested environments and security contact before
-creating the independent `data-transfer-guard` repository. No GitHub publication
-has been performed. No SQLite Fault Lab code is imported or modified.
+If writing the output is not safe or possible, an error JSON is sent to **stderr** and exit code `2` is returned. A partial or incomplete output must **not** be treated as successful evidence. The destination directory must already exist.
 
-## Consolidated public evidence
+## Test and verification
 
-This release candidate consolidates 49 acceptance case records into `evidence/acceptance_summary.json`, avoiding repeated fixture CSVs. Original per-case files remain only in the development submission archive. All fixture bytes and assertions are reproducible from `tests/cases.json` and the test runner.
+The project includes **53 automated checks**: 49 CLI acceptance cases plus four additional checks. The acceptance cases include failures as well as successful comparisons; a correctly detected negative example counts as a successful **test**, even though the CLI reports `FAIL`.
+
+**GitHub Actions:** Ubuntu and Windows × Python 3.11, 3.12, 3.13 — **all six jobs passed** on the published main-branch [run #3](https://github.com/KenKan964/data-transfer-guard/actions/runs/43458416344). For any newer changes, consult [the latest Actions runs](https://github.com/KenKan964/data-transfer-guard/actions). macOS has not been validated in this matrix.
+
+Reproduce the checks locally:
+
+```sh
+python3 -m unittest discover -s tests -v
+python3 benchmarks/compare.py comparison-001
+```
+
+Use `py -3` on Windows if needed. The comparison tool requires a new output directory. Its independent Python `csv` / `unittest` baseline demonstrates that similar checks can be implemented without DTG; no speed, human-effort, or commercial advantage is established.
+
+## Safety and limitations
+
+- **Read-only input:** this tool compares CSV snapshots; it performs **no updates or transfers**.
+- No Excel, Google Sheets, database, cloud connector, network traffic, telemetry, or credentials.
+- Strict exact-string matching: no composite IDs, fuzzy company-name matching, normalization, or verification of the *correctness* of permitted new values.
+- Files are read into memory. Very large inputs, streaming, concurrent writers, special devices, and hostile filesystem changes are outside the intended scope.
+- The displayed record positions are CSV record ordinals, **not necessarily physical line numbers** when fields contain line breaks.
+- Treat reports as potentially sensitive even with IDs suppressed; protect them and avoid attaching real records to public issues.
+
+## Documentation
+
+- [日本語 README](README_ja.md)
+- [Technical specification](TECHNICAL_SPEC.md)
+- [Security considerations](SECURITY.md)
+- [Recorded sample violation](evidence/example_bad.json)
+- [Comparison evidence](evidence/comparison_final/summary.json)
+- [Verification report](REPORT_ja.md)
+- [Change history](CHANGELOG.md)
+- [MIT License](LICENSE)
+
+**License:** MIT · Copyright © 2026 KenKan964.
